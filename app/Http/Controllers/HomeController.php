@@ -6,14 +6,9 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    /**
-     * Menampilkan Landing Page Utama KursusKu.
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
     public function index()
     {
-        $siteName = 'Kursusku';
+        $siteName = 'KursusKu';
 
         $featured = [
             [
