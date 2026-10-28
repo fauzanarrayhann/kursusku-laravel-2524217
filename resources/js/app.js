@@ -1,6 +1,4 @@
-// Hapus atau beri komentar pada baris ini:
-// import './bootstrap';
-
+import './bootstrap';
 import 'bootstrap';
 import $ from 'jquery';
 
