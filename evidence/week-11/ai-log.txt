@@ -1,0 +1,11 @@
+# AI Usage Log - Praktikum Pertemuan 11
+
+1. Prompt / Tujuan: Membantu menyusun Form Request untuk Store dan Update beserta aturan unique ignore pada UpdateCourseRequest.
+   - Saran AI: Membuat kelas StoreCourseRequest dan UpdateCourseRequest menggunakan rule `Rule::unique('courses', 'code')->ignore($course)`.
+   - Dipakai?: Ya
+   - Alasan: Sangat membantu memahami cara mengabaikan record diri sendiri saat proses update data.
+
+2. Prompt / Tujuan: Membantu merancang tampilan view show dan edit dengan penanganan error validation feedback di setiap field.
+   - Saran AI: Menggunakan direktif @error('field') bersama kelas is-invalid Bootstrap dan fungsi old('field', $course->field).
+   - Dipakai?: Ya
+   - Alasan: Memastikan user experience (UX) form validasi berjalan dengan baik dan data lama tidak hilang saat terjadi kesalahan input.

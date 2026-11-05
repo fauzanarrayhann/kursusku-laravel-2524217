@@ -23,7 +23,7 @@
     <div class="card">
         <div class="card-body p-0">
             <div class="table-responsive">
-                <table class="table table-striped mb-0">
+                <table class="table table-striped mb-0 align-middle">
                     <thead>
                         <tr>
                             <th>Kode</th>
@@ -32,6 +32,7 @@
                             <th>Kuota</th>
                             <th>Mulai</th>
                             <th>Status</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,12 +42,34 @@
                             <td>{{ $course->name }}</td>
                             <td>Rp {{ number_format($course->fee, 0, ',', '.') }}</td>
                             <td>{{ $course->quota }}</td>
-                            <td>{{ $course->start_date->format('d/m/Y') }}</td>
+                            <td>{{ $course->start_date?->format('d/m/Y') }}</td>
                             <td>{{ ucfirst($course->status) }}</td>
+                            <td>
+                                <div class="d-flex gap-1 flex-wrap">
+                                    {{-- Tombol Detail ke halaman show --}}
+                                    <a href="{{ route('courses.show', $course) }}" class="btn btn-sm btn-outline-primary">
+                                        Detail
+                                    </a>
+                                    
+                                    {{-- Tombol Edit ke halaman edit --}}
+                                    <a href="{{ route('courses.edit', $course) }}" class="btn btn-sm btn-outline-warning">
+                                        Edit
+                                    </a>
+                                    
+                                    {{-- Form Delete dengan konfirmasi dan method spoofing DELETE --}}
+                                    <form method="POST" action="{{ route('courses.destroy', $course) }}" onsubmit="return confirm('Hapus kursus ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="6" class="text-center py-4 text-muted">
+                            <td colspan="7" class="text-center py-4 text-muted">
                                 Belum ada data kursus.
                             </td>
                         </tr>
