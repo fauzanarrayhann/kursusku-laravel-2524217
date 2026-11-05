@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use App\Http\Controllers\CourseController;
+
+Route::resource('courses', CourseController::class);
 
 Route::get('/', function () {
     return view('home');
