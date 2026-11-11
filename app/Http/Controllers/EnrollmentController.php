@@ -22,7 +22,8 @@ class EnrollmentController extends Controller
     public function create()
     {
         $participants = Participant::orderBy('name')->get();
-        $courses = Course::where('status', 'active')
+        
+        $courses = Course::where('status', 'open')
             ->orderBy('name')
             ->get();
             
