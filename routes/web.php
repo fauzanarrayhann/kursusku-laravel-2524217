@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Middleware\AdminOnly;
 
 // 1. Halaman Utama / Home (bisa diakses umum)
 Route::get('/', function () {
@@ -17,12 +17,16 @@ Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
+    // Daftar akun
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+
     // Forgot Password
     Route::get('/forgot-password', [AuthController::class, 'showForgotPassword'])->name('password.request');
     Route::post('/forgot-password', [AuthController::class, 'resetPasswordDirect'])->name('password.update.direct');
 });
 
-// 3. Route Khusus User/Admin yang Sudah Login (Auth)
+// 3. Route untuk semua akun yang sudah login (role admin maupun user)
 Route::middleware('auth')->group(function () {
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -32,14 +36,11 @@ Route::middleware('auth')->group(function () {
     Route::put('/admin/profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::put('/admin/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 
-    // Route Resource untuk Course (CRUD Course) - khusus yang sudah login
-    Route::resource('courses', CourseController::class);
-
-    // Route Resource untuk Enrollment - khusus yang sudah login
+    // Formulir pendaftaran kursus (boleh untuk semua akun yang login)
     Route::resource('enrollments', EnrollmentController::class)
-        ->only(['index', 'create', 'store']);
+        ->only(['create', 'store']);
 
-    // Route Ketersediaan Kursus - khusus yang sudah login
+    // Ketersediaan kursus (dipakai Ajax pada formulir pendaftaran)
     Route::get('/courses/{course}/availability', function (int $course) {
         $availability = [
             1 => ['course' => 'Web Dasar', 'remaining' => 12],
@@ -51,4 +52,14 @@ Route::middleware('auth')->group(function () {
 
         return response()->json($availability[$course]);
     })->name('courses.availability');
+
+    // 4. Route KHUSUS ADMIN
+    Route::middleware(AdminOnly::class)->group(function () {
+        // CRUD Course
+        Route::resource('courses', CourseController::class);
+
+        // Laporan / daftar Enrollment
+        Route::resource('enrollments', EnrollmentController::class)
+            ->only(['index']);
+    });
 });
